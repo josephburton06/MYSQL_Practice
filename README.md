@@ -1,0 +1,1 @@
+#This repo is used to house SQL queries used for common exercises.  This code is using MYSQL.
