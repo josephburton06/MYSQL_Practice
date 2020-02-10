@@ -64,3 +64,40 @@ FROM employees
 WHERE first_name IN ('Irena', 'Vidya', 'Maya')
 
 GROUP BY gender;
+
+-- Recall the query the generated usernames for the employees from the functions lesson. 
+-- Are there any duplicate usernames?
+SELECT 
+	LOWER(CONCAT(
+		SUBSTRING(first_name, 1, 1)
+        ,SUBSTRING(last_name, 1, 4)
+        ,'_'
+        ,SUBSTRING(birth_date, 6, 2)
+        ,SUBSTRING(birth_date, 3,2)
+        )) AS username
+	,COUNT(*)
+FROM employees
+
+GROUP BY username
+
+HAVING COUNT(username) > 1;
+
+--  Bonus: How many duplicate usernames are there?
+SELECT
+	COUNT(a.username)
+    
+FROM(
+	SELECT 
+		LOWER(CONCAT(
+			SUBSTRING(first_name, 1, 1)
+			,SUBSTRING(last_name, 1, 4)
+			,'_'
+			,SUBSTRING(birth_date, 6, 2)
+			,SUBSTRING(birth_date, 3,2)
+			)) AS username
+
+	FROM employees
+
+	GROUP BY username
+
+	HAVING COUNT(username) > 1) AS a;
