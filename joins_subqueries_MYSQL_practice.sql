@@ -107,3 +107,55 @@ LEFT JOIN
 ON b.emp_no = d.emp_no
 
 ORDER BY a.dept_name;
+
+-- Find the number of employees in each department.
+
+SELECT
+    b.dept_name
+    ,a.dept_no
+    ,COUNT(*)
+    
+FROM dept_emp AS a
+
+LEFT JOIN departments AS b
+ON a.dept_no = b.dept_no
+
+WHERE a.to_date LIKE '9999%'
+
+GROUP BY
+	b.dept_name
+    ,a.dept_no
+
+ORDER BY
+	a.dept_no;
+    
+-- Which department has the highest average salary?
+
+SELECT
+	dept_name
+    ,avg_salary AS max_avg_dept_salary
+
+FROM 
+	(
+    SELECT
+		b.dept_name
+        ,AVG(c.salary) AS avg_salary
+    
+    FROM dept_emp AS a
+    
+    LEFT JOIN departments AS b
+    ON a.dept_no = b.dept_no
+    
+    LEFT JOIN salaries AS c
+    ON a.emp_no = c.emp_no
+    
+    -- We want to make sure we get the employee's current department 
+	-- and current salary.
+    WHERE a.to_date LIKE '9999%' AND c.to_date LIKE '9999%'
+    
+    GROUP BY b.dept_name
+    ) AS a
+
+ORDER BY avg_salary DESC
+
+LIMIT 1;
