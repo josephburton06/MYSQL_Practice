@@ -191,3 +191,19 @@ INNER JOIN
 	) AS b
 ON a.emp_no = b.emp_no
 GROUP BY title;
+
+-- How many people in the employees table are no longer working for the company?
+
+SELECT
+	COUNT(DISTINCT(emp_no))
+
+FROM employees
+
+-- We will create a list of employee numbers that are still employed.
+-- Then, we will look for employee numbers not in that last.
+WHERE emp_no NOT IN
+	(
+    SELECT DISTINCT(emp_no) AS still_employed
+    FROM salaries
+    WHERE to_date LIKE '9999%'
+    )
