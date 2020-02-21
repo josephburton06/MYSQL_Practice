@@ -206,4 +206,29 @@ WHERE emp_no NOT IN
     SELECT DISTINCT(emp_no) AS still_employed
     FROM salaries
     WHERE to_date LIKE '9999%'
-    )
+    );
+    
+-- Find all the employees that currently have a higher than average salary.
+
+SELECT
+	CONCAT(b.first_name, ' ', b.last_name) AS employee
+    ,a.salary AS salary
+
+FROM 
+	(
+    SELECT
+		emp_no
+		,salary
+    FROM salaries
+    WHERE to_date LIKE '9999%'
+    ) AS a
+
+LEFT JOIN employees AS b
+ON a.emp_no = b.emp_no
+
+WHERE a.salary >
+	(
+    SELECT AVG(salary) AS avg_salary
+    FROM salaries
+    WHERE to_date LIKE '9999%'
+    );
