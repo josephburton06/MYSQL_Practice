@@ -11,4 +11,26 @@ SELECT
         ELSE 'Is that a $?'
 	END AS alpha_group
 
+FROM employees;
+
+-- How many employees were born in each decade?
+
+SELECT
+	SUBSTR(birth_date, 3, 1) AS birth_decade
+    ,COUNT(*)
+
 FROM employees
+
+GROUP BY birth_decade;
+
+-- We can also do a count by each birth year.
+
+SELECT 
+	SUBSTRING_INDEX(birth_date, '-', 1) AS birth_year
+    ,COUNT(*)
+    
+FROM employees
+
+GROUP BY birth_year
+
+ORDER BY birth_year;
