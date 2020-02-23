@@ -34,3 +34,24 @@ FROM employees
 GROUP BY birth_year
 
 ORDER BY birth_year;
+
+-- Create a table with all current employee numbers, all of their salaries, and a
+-- new column that can be used as a flag for whether or not the salary is listed
+-- is the current salary of the employee.
+
+SELECT
+	a.emp_no
+    ,b.salary
+    ,IF(to_date LIKE '9999%', true, false) AS current_salary
+    
+FROM 
+	(
+	SELECT emp_no
+    FROM dept_emp
+    WHERE to_date LIKE '9999%'
+    ) AS a
+    
+LEFT JOIN salaries AS b
+ON a.emp_no = b.emp_no
+
+ORDER BY emp_no, salary DESC;
