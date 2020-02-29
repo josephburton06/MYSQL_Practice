@@ -9,12 +9,15 @@ SELECT
 
 FROM departments AS a
 
+-- This subquery is used to find names of managers that are still employed.
 LEFT JOIN 
 	(SELECT emp_no, dept_no
      FROM dept_manager 
      WHERE to_date LIKE '9999%')
      AS b
 ON a.dept_no = b.dept_no
+-- We use the LIKE '9999%' statement as employees that are currently still employed
+-- have 9999 listed as the year in the to_date column.
 
 LEFT JOIN employees AS c
 ON b.emp_no = c.emp_no
@@ -29,6 +32,7 @@ SELECT
 
 FROM departments AS a
 
+-- This subquery is used to find only currently employed managers.
 LEFT JOIN 
 	(SELECT 
 		emp_no
@@ -38,6 +42,7 @@ LEFT JOIN
      AS b
 ON a.dept_no = b.dept_no
 
+-- By using the Inner Join below, we are able to only keep women.
 INNER JOIN 
 	(SELECT 
 		emp_no
@@ -59,6 +64,9 @@ SELECT
     
 FROM titles AS a
 
+-- This subquery is used to get a list of all current customer service employees.
+-- By Inner Joining, we are able to match titles for only those individuals.  
+-- We could also right join.
 INNER JOIN 
 	(
     SELECT a.emp_no
@@ -135,6 +143,8 @@ SELECT
 	dept_name
     ,avg_salary AS max_avg_dept_salary
 
+-- Below, we find the highest salary in each department.  At the end, we'll
+-- Order By salary DESC and take only the first row, which will be the highest salary.
 FROM 
 	(
     SELECT
