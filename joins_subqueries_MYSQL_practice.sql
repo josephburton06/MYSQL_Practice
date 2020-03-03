@@ -242,3 +242,66 @@ WHERE a.salary >
     FROM salaries
     WHERE to_date LIKE '9999%'
     );
+    
+--  How much do the current managers of each department get paid, 
+--  relative to the average salary for the department? Is there any 
+--  department where the department manager gets paid less than the 
+--  average salary?
+
+SELECT
+	dept_avg_salary.dept_name
+    ,ROUND(dept_avg_salary.dept_avg_salary,2) AS dept_avg_salary
+    ,mgr_salary.mgr_salary
+    ,ROUND((mgr_salary.mgr_salary-dept_avg_salary.dept_avg_salary),2) AS mgr_sal_to_avg
+    
+FROM(
+	SELECT
+		a.dept_name
+		,AVG(b.salary) AS dept_avg_salary
+
+	FROM(
+		SELECT
+			a.emp_no
+			,a.dept_no
+			,b.dept_name
+			
+		FROM dept_emp AS a
+
+		LEFT JOIN departments AS b
+		ON a.dept_no = b.dept_no
+		
+		WHERE a.to_date LIKE '9999%'
+		) AS a
+		
+	LEFT JOIN(
+		SELECT 
+			emp_no
+			,salary
+			
+		FROM salaries
+		
+		WHERE to_date LIKE '9999%'
+		) AS b
+	ON a.emp_no = b.emp_no
+
+	GROUP BY a.dept_name
+    ) AS dept_avg_salary
+
+LEFT JOIN(
+	SELECT 
+		a.emp_no
+		,c.dept_name
+		,b.salary AS mgr_salary
+	FROM dept_manager AS a
+
+	LEFT JOIN salaries AS b
+	ON a.emp_no = b.emp_no
+
+	LEFT JOIN departments AS c
+	ON a.dept_no = c.dept_no
+
+	WHERE a.to_date LIKE '9999%' and b.to_date LIKE '9999%'
+    ) AS mgr_salary
+ON dept_avg_salary.dept_name = mgr_salary.dept_name
+
+ORDER BY dept_avg_salary.dept_name
